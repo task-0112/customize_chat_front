@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+generate_project_summary.py
+customize_chat_front_project_summary.txt
