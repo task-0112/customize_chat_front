@@ -1,7 +1,9 @@
+// src/app/components/chat/ChatRoom.tsx
+
 'use client'
 
 import React, { useState } from 'react';
-import { Container, VStack, Box, Divider } from '@chakra-ui/react';
+import { Container, VStack, Box, Divider, Flex } from '@chakra-ui/react';
 import { useChat } from '../../hooks/useChat';
 import ChatInput from './ChatInput';
 import ChatMessage from './ChatMessage';
@@ -16,21 +18,21 @@ const ChatRoom: React.FC = () => {
     };
 
     return (
-        <Container maxW="container.xl" p={5}>
-            <VStack spacing={4} align="stretch">
-                <Box>
+        <Container maxW="container.xl" py={6}>
+            <Flex direction="column" h="70vh">
+                <Box mb={4}>
                     <ChatModal onSetModelType={handleModelTypeChange} />
                 </Box>
-                <Divider />
-                <Box flex="1" overflowY="auto" bg="gray.100" p={3} borderRadius="lg">
+                <Divider borderColor="gray.300" />
+                <Box flex="1" overflowY="auto" bg="white" p={4} borderRadius="lg" boxShadow="md">
                     {messages.map((message, index) => (
                         <ChatMessage key={index} message={message} />
                     ))}
                 </Box>
-                <Box mt={4}>
+                <Box mt={6}>
                     <ChatInput onSend={sendMessage} />
                 </Box>
-            </VStack>
+            </Flex>
         </Container>
     );
 };

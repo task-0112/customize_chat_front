@@ -1,5 +1,7 @@
+// src/app/components/chat/ChatModal.tsx
+
 import React, { useState } from 'react';
-import { Select, FormControl, FormLabel, Box, Menu, MenuButton, MenuList, MenuItem, Button } from '@chakra-ui/react';
+import { FormControl, FormLabel, Box, Menu, MenuButton, MenuList, MenuItem, Button } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 
 type Props = {
@@ -21,16 +23,16 @@ const ChatModal: React.FC<Props> = ({ onSetModelType }) => {
 
     return (
         <FormControl>
-            <FormLabel htmlFor="model-type-select" mb="1em">
+            <FormLabel htmlFor="model-type-select" fontSize="lg" fontWeight="bold" mb="2">
                 モデルタイプを選択
             </FormLabel>
             <Menu>
-                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="blue" variant="outline" width="full">
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} colorScheme="blue" size="lg" width="full" borderRadius="lg">
                     {options.find(option => option.value === selectedModelType)?.label || "モデルタイプを選択"}
                 </MenuButton>
-                <MenuList>
+                <MenuList borderRadius="lg" boxShadow="lg">
                     {options.map(option => (
-                        <MenuItem key={option.value} onClick={() => handleModelTypeChange(option.value)}>
+                        <MenuItem key={option.value} onClick={() => handleModelTypeChange(option.value)} fontSize="md" _hover={{ bg: 'blue.50' }}>
                             {option.label}
                         </MenuItem>
                     ))}

@@ -5,28 +5,27 @@ export const useChat = (modelType: number) => {
 const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
 
 const getApiEndpoint = () => {
-switch (modelType) {
-    case 0:
-    return API.NomalChatGptV1;
-    case 1:
-    return API.NomalChatGptV1;
-    default:
-    return API.NomalChatGptV1;
-}
+    switch (modelType) {
+        case 0:
+            return API.NomalChatGptV1;
+        case 1:
+            return API.NomalChatGptV1;
+        default:
+            return API.NomalChatGptV1;
+    }
 };
 
 const sendMessage = async (message: string) => {
-const newMessage = { role: 'user', content: message };
+const newMessage = { role: 'user', content: message, modelType };
 setMessages((prevMessages) => [...prevMessages, { ...newMessage, role: 'user' }]);
 
 try {
-    console.log('送信確認', newMessage);
     const response = await fetch(getApiEndpoint(), {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newMessage),
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newMessage),
     });
 
     if (!response.body) throw new Error();

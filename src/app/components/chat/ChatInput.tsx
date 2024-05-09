@@ -1,3 +1,5 @@
+// src/app/components/chat/ChatInput.tsx
+
 import React, { useState } from 'react';
 import { Input, Button, Flex, useColorModeValue } from '@chakra-ui/react';
 
@@ -20,21 +22,25 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
     const buttonHoverBg = useColorModeValue('blue.600', 'blue.400');
 
     return (
-        <Flex gap="2" mt="4">
+        <Flex gap="3" mt="5">
             <Input
                 flex="1"
                 bg={inputBg}
                 placeholder="Type your message..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                size="lg"
+                borderRadius="lg"
             />
             <Button
                 colorScheme="blue"
-                px="8"
+                px="10"
                 onClick={handleSend}
                 disabled={!message.trim()}
                 bg={buttonBg}
                 _hover={{ bg: buttonHoverBg }}
+                size="lg"
+                borderRadius="lg"
             >
                 Send
             </Button>
