@@ -10,6 +10,8 @@ const getApiEndpoint = () => {
             return API.NomalChatGptV1;
         case 1:
             return API.NomalChatGptV1;
+        case 2:
+            return API.NomalChatGeminiV1;
         default:
             return API.NomalChatGptV1;
     }
@@ -27,6 +29,7 @@ try {
         },
         body: JSON.stringify(newMessage),
     });
+    console.log(response.body)
 
     if (!response.body) throw new Error();
 

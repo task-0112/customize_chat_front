@@ -3,5 +3,8 @@ export const apiUrl =
 
 export const API = {
     // ChatGPT通常回答
-    NomalChatGptV1: `${apiUrl}/nomal/chat/v1`,
+    NomalChatGptV1: `${apiUrl}/nomal/chat/gpt/v1`,
+
+    // Gemini通常回答
+    NomalChatGeminiV1: `${apiUrl}/nomal/chat/gemini/v1`,
 }

@@ -1,50 +1,43 @@
 // src/app/components/chat/ChatInput.tsx
 
 import React, { useState } from 'react';
-import { Input, Button, Flex, useColorModeValue } from '@chakra-ui/react';
+import { Input, Button, HStack } from '@chakra-ui/react';
 
 interface ChatInputProps {
     onSend: (message: string) => void;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
-    const [message, setMessage] = useState('');
+    const [input, setInput] = useState('');
 
     const handleSend = () => {
-        if (message.trim() !== '') {
-            onSend(message);
-            setMessage('');
+        if (input.trim() !== '') {
+            onSend(input);
+            setInput('');
         }
     };
 
-    const inputBg = useColorModeValue('gray.100', 'gray.700');
-    const buttonBg = useColorModeValue('blue.500', 'blue.300');
-    const buttonHoverBg = useColorModeValue('blue.600', 'blue.400');
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if ((e.key === 'Enter' && e.shiftKey) || (e.key === 'Enter' && e.metaKey)) {
+            e.preventDefault();
+            handleSend();
+        }
+    };
 
     return (
-        <Flex gap="3" mt="5">
+        <HStack spacing={4}>
             <Input
-                flex="1"
-                bg={inputBg}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder="Type your message..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
                 size="lg"
-                borderRadius="lg"
+                flex="1"
             />
-            <Button
-                colorScheme="blue"
-                px="10"
-                onClick={handleSend}
-                disabled={!message.trim()}
-                bg={buttonBg}
-                _hover={{ bg: buttonHoverBg }}
-                size="lg"
-                borderRadius="lg"
-            >
+            <Button onClick={handleSend} size="lg" colorScheme="blue">
                 Send
             </Button>
-        </Flex>
+        </HStack>
     );
 };
 

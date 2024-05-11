@@ -12,8 +12,9 @@ const ChatModal: React.FC<Props> = ({ onSetModelType }) => {
     const [selectedModelType, setSelectedModelType] = useState<number>(0);
 
     const options = [
-        { value: 0, label: "比較的低コストで速い回答 (GPT-3.5-turbo)" },
-        { value: 1, label: "より賢い回答 (GPT-4-turbo)" },
+        { value: 0, label: "GPT-3.5" },
+        { value: 1, label: "GPT-4" },
+        { value: 2, label: "GeminiPro-1.5" }
     ];
 
     const handleModelTypeChange = (value: number) => {
