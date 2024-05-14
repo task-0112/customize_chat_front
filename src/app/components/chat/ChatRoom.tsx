@@ -1,4 +1,5 @@
 // src/app/components/chat/ChatRoom.tsx
+
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -10,9 +11,8 @@ import ChatModal from './ChatModal';
 
 const ChatRoom: React.FC = () => {
     const [modelType, setModelType] = useState<number>(0);
-    const { messages, sendMessage, isGenerating, stopGenerating } = useChat(modelType);
+    const { messages, sendMessage } = useChat(modelType);
     const chatBoxRef = useRef<HTMLDivElement>(null);
-    console.log('めっせーじ', messages)
 
     const handleModelTypeChange = (type: number) => {
         setModelType(type);
@@ -37,8 +37,6 @@ const ChatRoom: React.FC = () => {
                         onSend={sendMessage}
                         onSetModelType={handleModelTypeChange}
                         selectedModelType={modelType}
-                        isGenerating={isGenerating}
-                        onStopGenerating={stopGenerating}
                     />
                 </Box>
             </Flex>

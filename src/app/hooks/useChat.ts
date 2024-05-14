@@ -1,82 +1,74 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { API } from '../api/api';
 
 export const useChat = (modelType: number) => {
-    const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const socketRef = useRef<WebSocket | null>(null);
+const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
 
-    const getApiEndpoint = () => {
-        switch (modelType) {
-            case 0:
-            case 1:
-                return API.NomalChatGptV1;
-            case 2:
-                return API.NomalChatGeminiV1;
-            default:
-                return API.NomalChatGptV1;
-        }
-    };
+const getApiEndpoint = () => {
+    switch (modelType) {
+        case 0:
+            return API.NomalChatGptV1;
+        case 1:
+            return API.NomalChatGptV1;
+        case 2:
+            return API.NomalChatGeminiV1;
+        default:
+            return API.NomalChatGptV1;
+    }
+};
 
-    const sendMessage = async (message: string) => {
-        if (!isGenerating) {
-            const newMessage = { role: 'user', content: message, modelType };
-            setMessages((prevMessages) => [...prevMessages, { ...newMessage, role: 'user' }]);
-            setIsGenerating(true);
+const sendMessage = async (message: string) => {
+const newMessage = { role: 'user', content: message, modelType };
+setMessages((prevMessages) => [...prevMessages, { ...newMessage, role: 'user' }]);
 
-            try {
-                const socket = new WebSocket(getApiEndpoint());
-                socketRef.current = socket;
-                socket.onopen = () => {
-                    socket.send(JSON.stringify(newMessage));
-                };
+try {
+    const response = await fetch(getApiEndpoint(), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newMessage),
+    });
+    console.log(response.body)
 
-                socket.onmessage = (event) => {
-                    const data = JSON.parse(event.data);
-                    if (data.type === 'assistant') {
-                        setMessages((prevMessages) => {
-                            const lastMessage = prevMessages[prevMessages.length - 1];
-                            if (lastMessage.role === 'assistant') {
-                                return [
-                                    ...prevMessages.slice(0, -1),
-                                    { ...lastMessage, content: data.content },
-                                ];
-                            }
-                            return [...prevMessages, { role: 'assistant', content: data.content }];
-                        });
-                    }
-                
-                    if (data.type === 'end') {
-                        if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-                            
-                            socketRef.current.close();
-                            setIsGenerating(false);
-                        }
-                    }
-                };
+    if (!response.body) throw new Error();
 
-                socket.onclose = () => {
-                    setIsGenerating(false);
-                };
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let assistantMessage = '';
 
-                socket.onerror = (error) => {
-                    console.error('WebSocket error:', error);
-                    setIsGenerating(false);
-                };
-            } catch (error) {
-                console.error('Error:', error);
-                setIsGenerating(false);
+    setMessages((prevMessages) => [
+    ...prevMessages,
+    { role: 'assistant', content: assistantMessage },
+    ]);
+
+    while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    const chunk = decoder.decode(value);
+    const lines = chunk.split('\n');
+    for (const line of lines) {
+        if (line.startsWith('data: ')) {
+        const data = line.slice('data: '.length);
+        assistantMessage += data;
+        setMessages((prevMessages) => {
+            const lastMessage = prevMessages[prevMessages.length - 1];
+            if (lastMessage.role === 'assistant') {
+            return [
+                ...prevMessages.slice(0, -1),
+                { ...lastMessage, content: assistantMessage },
+            ];
             }
+            return prevMessages;
+        });
         }
-    };
+    }
+    }
+} catch (error) {
+    console.error('Error:', error);
+}
+};
 
-    const stopGenerating = () => {
-        if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-            socketRef.current.send(JSON.stringify({ type: 'stop' }));
-            setIsGenerating(false);
-            socketRef.current.close();
-        }
-    };
-
-    return { messages, sendMessage, isGenerating, stopGenerating };
+return { messages, sendMessage };
 };

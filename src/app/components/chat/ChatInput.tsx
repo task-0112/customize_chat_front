@@ -1,6 +1,7 @@
 // src/app/components/chat/ChatInput.tsx
+
 import React, { useState } from 'react';
-import { Textarea, InputGroup, InputRightElement, IconButton, VStack, Box, Button } from '@chakra-ui/react';
+import { Textarea, InputGroup, InputRightElement, IconButton, VStack, Box } from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import ChatModal from './ChatModal';
 
@@ -8,11 +9,9 @@ interface ChatInputProps {
     onSend: (message: string) => void;
     onSetModelType: (type: number) => void;
     selectedModelType: number;
-    isGenerating: boolean;
-    onStopGenerating: () => void;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSend, onSetModelType, selectedModelType, isGenerating, onStopGenerating }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSend, onSetModelType, selectedModelType }) => {
     const [input, setInput] = useState('');
 
     const handleSend = () => {
@@ -23,8 +22,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onSetModelType, selectedM
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        // シフト+エンターまたはコマンド+エンターで送信
         if (e.key === 'Enter' && (e.shiftKey || e.metaKey)) {
-            e.preventDefault();
+            e.preventDefault(); // デフォルトの改行挿入を防ぐ
             handleSend();
         }
     };
@@ -34,7 +34,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onSetModelType, selectedM
             <VStack spacing={0}>
                 <InputGroup size="lg">
                     <Textarea
-                        pr="4.5rem"
+                        pr="4.5rem"  // ボタンのためのパディング
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}
@@ -46,7 +46,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onSetModelType, selectedM
                         _focus={{ outline: 'none', boxShadow: 'none' }}
                         height="45px"
                     />
-                    {input.trim() !== '' && !isGenerating && (
+                    {input.trim() !== '' && (
                         <InputRightElement width="4.5rem">
                             <IconButton
                                 aria-label="Send message"
@@ -56,18 +56,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onSetModelType, selectedM
                                 onClick={handleSend}
                                 colorScheme="blue"
                             />
-                        </InputRightElement>
-                    )}
-                    {isGenerating && (
-                        <InputRightElement width="4.5rem">
-                            <Button
-                                h="1.75rem"
-                                size="sm"
-                                onClick={onStopGenerating}
-                                colorScheme="red"
-                            >
-                                Stop
-                            </Button>
                         </InputRightElement>
                     )}
                 </InputGroup>

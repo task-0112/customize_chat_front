@@ -1,7 +1,7 @@
 // src/app/components/chat/ChatModal.tsx
 
 import React from 'react';
-import { FormControl, Menu, MenuButton, MenuList, MenuItem, Button, Portal, Box, Flex } from '@chakra-ui/react';
+import { FormControl, Menu, MenuButton, MenuList, MenuItem, Button, Portal } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 
 type Props = {
@@ -21,6 +21,7 @@ const ChatModal: React.FC<Props> = ({ onSetModelType, selectedModelType }) => {
             <Menu placement="top">
                 <MenuButton
                     as={Button}
+                    rightIcon={<ChevronDownIcon />}
                     variant="ghost"
                     size="lg"
                     width="full"
@@ -28,14 +29,7 @@ const ChatModal: React.FC<Props> = ({ onSetModelType, selectedModelType }) => {
                     textAlign="left"
                     maxWidth="15%"
                 >
-                    <Flex alignItems="center" justifyContent="space-between">
-                        <Box flex="1" textAlign="left" mr={2}>
-                            {options.find(option => option.value === selectedModelType)?.label || "モデルタイプを選択"}
-                        </Box>
-                        <Box>
-                            <ChevronDownIcon />
-                        </Box>
-                    </Flex>
+                    {options.find(option => option.value === selectedModelType)?.label || "モデルタイプを選択"}
                 </MenuButton>
                 <Portal>
                     <MenuList borderRadius="lg" boxShadow="lg">
