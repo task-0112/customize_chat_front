@@ -3,8 +3,8 @@ export const apiUrl =
 
 export const API = {
     // ChatGPT通常回答
-    NomalChatGptV1: `${apiUrl}/nomal/chat/gpt/v1`,
+    NomalChatGptV1: `ws://${apiUrl.replace('http://', '')}/ws/nomal/chat/gpt/v1`,
 
     // Gemini通常回答
-    NomalChatGeminiV1: `${apiUrl}/nomal/chat/gemini/v1`,
+    NomalChatGeminiV1: `ws://${apiUrl.replace('http://', '')}/ws/nomal/chat/gemini/v1`,
 }
